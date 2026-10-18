@@ -1,0 +1,25 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "databento_to_lobster.exe",
+      "name": "databento_to_lobster.exe",
+      "currentDir": "${workspaceRoot}",
+      "args": [
+        "DEMO2025JAN/xnas-itch-20250122.mbo.GOOGL.dbn",
+        "GOOGL",
+        "2025-01-22",
+        "10"
+      ]
+    },
+    {
+      "type": "default",
+      "project": "src\\main.cpp",
+      "projectTarget": "",
+      "name": "main.cpp"
+    }
+  ]
+}

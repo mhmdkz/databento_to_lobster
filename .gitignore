@@ -1,0 +1,10 @@
+/out/
+/build/
+/.vs/
+CMakeUserPresets.json
+*.user
+*.dbn
+*.dbn.zst
+*.csv
+*.env
+/data/
