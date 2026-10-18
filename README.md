@@ -31,7 +31,7 @@ Dependencies (`fmt`, `openssl`, `zstd` via vcpkg; `databento-cpp` as a submodule
 ## Usage
 
 ```
-databento_to_lobster <input.dbn.zst> <output_dir>
+databento_to_lobster <input.dbn> <args> <depth_levels>
 ```
 
 ## Disclaimer
