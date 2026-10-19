@@ -4,7 +4,7 @@ A high-speed C++ converter that turns Databento's NASDAQ TotalView-ITCH dataset 
 
 ## Purpose
 
-The goal is simplicity: to let Databento users who want to research limit order book data work with LOBSTER-format tooling with less effort.
+The goal is simplicity: to let Databento users who want to research limit order book data work with LOBSTER format with less effort.
 
 ## What it does
 
@@ -12,7 +12,7 @@ The goal is simplicity: to let Databento users who want to research limit order 
 - Fully automated, one run per input file.
 - Re-expresses events in the LOBSTER layout only. It does not modify, resample, or synthesize any underlying market event.
 
-More details on how the conversion happens are on the [wiki](https://github.com/<user>/<repo>/wiki).
+More details on how the conversion happens and limitations are on the [wiki](https://github.com/mhmdkz/databento_to_lobster/wiki).
 
 ## Build
 
@@ -31,17 +31,17 @@ Dependencies (`fmt`, `openssl`, `zstd` via vcpkg; `databento-cpp` as a submodule
 ## Usage
 
 ```
-databento_to_lobster <input.dbn> <args> <depth_levels>
+databento_to_lobster <input.dbn> <depth_levels>
 ```
 
 ## Disclaimer
 
-This is an independent project developed during my thesis. I claim no ownership of the data, the source schemas, or the LOBSTER format. The conversion was obtained by reverse engineering the public documentation listed below. Databento data remains subject to Databento's own license and terms.
+This is an independent project, developed as a tool for my thesis research. I claim no ownership of the data, the source schemas, or the LOBSTER format. The conversion logic was derived from the public documentation listed below. Databento data remains subject to Databento's own license and terms.
 
 ## Sources
 
 - Nasdaq, *TotalView-ITCH Specification*: https://www.nasdaqtrader.com/content/technicalsupport/specifications/dataproducts/NQTVITCHSpecification.pdf
-- Huang & Polak, *LOBSTER: Limit Order Book Reconstruction System* (SSRN): https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1977207
+- Huang & Polak, *LOBSTER: Limit Order Book Reconstruction System*: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1977207
 - Databento, *Limit order book example*: https://databento.com/docs/examples/order-book/limit-order-book?historical=cpp&live=cpp&reference=python
 - Databento, *XNAS.ITCH dataset, MBO normalization*: https://databento.com/docs/venues-and-datasets/xnas-itch#mbo-normalization?historical=cpp&live=cpp&reference=python
 

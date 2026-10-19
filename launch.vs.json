@@ -10,8 +10,6 @@
       "currentDir": "${workspaceRoot}",
       "args": [
         "DEMO2025JAN/xnas-itch-20250122.mbo.GOOGL.dbn",
-        "GOOGL",
-        "2025-01-22",
         "10"
       ]
     },
