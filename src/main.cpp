@@ -100,6 +100,43 @@ namespace {
         return fmt::format("{}_{}_{}", out_name, out_date, session_tag);
     }
 
+    struct DbnFileInfo {
+        std::string ticker;
+        std::string date; // "YYYY-MM-DD"
+    };
+
+    // Parses "xnas-itch-YYYYMMDD.mbo.<TICKER>.dbn" (optionally followed by ".zst")
+    static std::optional<DbnFileInfo> ParseDatabentoFilename(std::string_view name) {
+        constexpr std::string_view kPrefix = "xnas-itch-";
+        constexpr std::string_view kMbo = ".mbo.";
+        constexpr std::string_view kDbn = ".dbn";
+
+        if (name.substr(0, kPrefix.size()) != kPrefix) return std::nullopt;
+        name.remove_prefix(kPrefix.size());
+
+        if (name.size() < 8) return std::nullopt;
+        const std::string_view ymd = name.substr(0, 8);
+        for (char c : ymd) {
+            if (c < '0' || c > '9') return std::nullopt;
+        }
+        name.remove_prefix(8);
+
+        if (name.substr(0, kMbo.size()) != kMbo) return std::nullopt;
+        name.remove_prefix(kMbo.size());
+
+        // ticker = everything up to the last ".dbn" (so tickers containing '.' still work)
+        const std::size_t dbn_pos = name.rfind(kDbn);
+        if (dbn_pos == std::string_view::npos || dbn_pos == 0) return std::nullopt;
+
+        const std::string_view tail = name.substr(dbn_pos + kDbn.size());
+        if (!tail.empty() && tail != ".zst") return std::nullopt;
+
+        return DbnFileInfo{
+            std::string(name.substr(0, dbn_pos)),
+            fmt::format("{}-{}-{}", ymd.substr(0, 4), ymd.substr(4, 2), ymd.substr(6, 2))
+        };
+    }
+
 } // namespace
 
 int main(int argc, char** argv) {
@@ -112,16 +149,25 @@ int main(int argc, char** argv) {
 
     // Defaults (used if args are missing)
     std::string input_token = "DEMO2025JAN/xnas-itch-20250122.mbo.GOOGL.dbn";
-    std::string out_name = "GOOGL";
-    std::string out_date = "2025-01-22";
+    std::string out_name;   // derived from the input filename
+    std::string out_date;   // derived from the input filename (YYYY-MM-DD)
     int depth = 1;
 
     // CLI:
-    // <relative_dbn_without_.zst OR full_path> <NAME> <YYYY-MM-DD> <DEPTH>
+    // <relative_dbn_without_.zst OR full_path> <DEPTH>
     if (argc >= 2) input_token = argv[1];
-    if (argc >= 3) out_name = argv[2];
-    if (argc >= 4) out_date = argv[3];
-    if (argc >= 5) depth = ParsePositiveIntOrDefault(argv[4], depth);
+    if (argc >= 3) depth = ParsePositiveIntOrDefault(argv[2], depth);
+
+    // Ticker + date come from the databento filename (xnas-itch-YYYYMMDD.mbo.TICKER.dbn[.zst])
+    if (const auto info = ParseDatabentoFilename(fs::path(input_token).filename().generic_string())) {
+        out_name = info->ticker;
+        out_date = info->date;
+    }
+    else {
+        fmt::print(stderr, "❌ Could not parse ticker/date from filename: {}\n"
+            "   Expected: xnas-itch-YYYYMMDD.mbo.TICKER.dbn[.zst]\n", input_token);
+        return 1;
+    }
 
     if (const auto ymd = ParseYmd(out_date)) {
         const bool is_dst = IsUsEasternDstDate(*ymd);
